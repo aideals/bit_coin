@@ -2,12 +2,12 @@ package main
 
 import (
 	"bytes"
-	"crypto/sha256"
 	"encoding/binary"
 	"time"
 )
 
 const genesisInfo = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
+const bits = 16
 
 //创建区块结构
 type Block struct {
@@ -53,30 +53,16 @@ func NewBlock(data string,prevBlockchain []byte) *Block {
 	}
 
 	//设置哈希
-	block.setHash()
+	//block.setHash()
+
+	pow := NewProofOfWork(block)
+	nonce,hash := pow.Run()
+
+	block.CurrentBlockHash = hash
+	block.Nonce = nonce
 
 	//返回区块
 	return &block
-}
-
-//把区块的数据进行sha256运算
-func (b *Block) setHash() {
-
-	var blockInfo []byte
-
-	//把新的字段添加进去
-	blockInfo = append(blockInfo,uint2Bytes(b.Version)...)
-	blockInfo = append(blockInfo,b.PrevBlockHash...)
-	blockInfo = append(blockInfo,b.CurrentBlockHash...)
-	blockInfo = append(blockInfo,uint2Bytes(b.TimeStamp)...)
-	blockInfo = append(blockInfo,b.MerkeRoot...)
-	blockInfo = append(blockInfo,uint2Bytes(b.Bits)...)
-	blockInfo = append(blockInfo,uint2Bytes(b.Nonce)...)
-
-	//进行sha256运算
-	hash := sha256.Sum256(blockInfo)
-
-	b.CurrentBlockHash = hash[:]
 }
 
 //把整数转换成字节流

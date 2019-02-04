@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 
@@ -16,5 +19,16 @@ func main() {
 		fmt.Printf("当前区块哈希值:%x\n",block.CurrentBlockHash)
 		fmt.Printf("区块链数据:%s\n",block.Data)
 		fmt.Printf("区块链数据(十六):%x\n",block.Data)
+
+		timeFormat := time.Unix(int64(block.TimeStamp),0).Format("2006-01-02 15:04:05")
+		fmt.Printf("时间戳:%s\n",timeFormat)
+
+		fmt.Printf("难度值:%d\n",block.Bits)
+		fmt.Printf("随机数:%x\n",block.Nonce)
+
+		pow := NewProofOfWork(*block)
+		fmt.Printf("IsVaild:%v\n",pow.IsVaild())
+
+		fmt.Printf("区块数据:%s\n",block.Data)
 	}
 }
