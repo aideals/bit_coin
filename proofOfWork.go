@@ -44,11 +44,12 @@ func (pow *ProofOfWork) prepareData(nonce uint64) []byte {
 	tmp := [][]byte{
 		uint2Bytes(b.Version),
 		b.PrevBlockHash,
+		//b.CurrentBlockHash,
 		b.MerkeRoot,
 		uint2Bytes(b.TimeStamp),
 		uint2Bytes(b.Nonce),
 		uint2Bytes(b.Bits),
-	    b.Data,
+	    //b.Data,
 	}
 
 	blockInfo := bytes.Join(tmp,[]byte{})
@@ -76,7 +77,7 @@ func (pow *ProofOfWork) Run() (uint64,[]byte) {
 
 		//如果生成哈希小于目标值，满足条件，返回哈希值，nonce，直接退出
 		if bigIntTmp.Cmp(&pow.target) == -1 {
-			fmt.Printf("挖矿成功,hash:%x,nonce:%d\n",hash,nonce)
+			//fmt.Printf("挖矿成功,hash:%x,nonce:%d\n",hash,nonce)
 			break
 		} else {
 			//如果生成哈希大于目标值，不满足条件，nonce++,继续遍历
@@ -96,25 +97,25 @@ func (pow *ProofOfWork) IsVaild() bool {
 
 	//旷工校验时，会拿到区块数据，然后自己校验哈希
 	data := pow.prepareData(block.Nonce)
-	fmt.Printf("-----isVaild,Nonce:%d\n",block.Nonce)
+	//fmt.Printf("-----isVaild,Nonce:%d\n",block.Nonce)
 
 	hash := sha256.Sum256(data)
-	fmt.Printf("-----isVaild,block hash:%x\n",block.CurrentBlockHash)
-	fmt.Printf("-----isVaild,Hash:%x\n",hash)
+	//fmt.Printf("-----isVaild,block hash:%x\n",block.CurrentBlockHash)
+	//fmt.Printf("-----isVaild,Hash:%x\n",hash)
 
 	//哈希值与bit.Int比较
 	var bigIntTmp big.Int
 
 	bigIntTmp.SetBytes(hash[:])
-	fmt.Printf("pow.target:%x\n",pow.target.Bytes())
-
-	res := bigIntTmp.Cmp(&pow.target)
-	fmt.Printf("bigIntTmp:%x\n",bigIntTmp.Bytes())
-
-	fmt.Printf("res:%x\n",res)
+	//fmt.Printf("pow.target:%x\n",pow.target.Bytes())
+	//
+	//res := bigIntTmp.Cmp(&pow.target)
+	//fmt.Printf("bigIntTmp:%x\n",bigIntTmp.Bytes())
+	//
+	//fmt.Printf("res:%x\n",res)
 
 	if bigIntTmp.Cmp(&pow.target) == -1 {
-		fmt.Printf("111111\n")
+		//fmt.Printf("111111\n")
 		return true
 	}
 
